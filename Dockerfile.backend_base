@@ -1,0 +1,27 @@
+FROM ruby:2.7.4
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+RUN addgroup --gid $GROUP_ID user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+
+
+
+RUN apt-get update -qq && apt-get install -y postgresql-client
+
+RUN gem install rails
+
+RUN mkdir /srv/backend
+
+WORKDIR /srv/backend
+
+RUN chmod -R 755 /srv/backend
+
+RUN gem install bundler --no-document
+
+RUN chown -R user:user /srv/backend
+
+USER user
+
+CMD ["bin", "bash"]
